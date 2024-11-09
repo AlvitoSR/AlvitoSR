@@ -1,6 +1,6 @@
 -- famosinho iniciado
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))() 
+               
 --aviso ao executar 
 Fluent:Notify({ Title = "SCRIPT", Content = "Executando..." })
 
@@ -57,12 +57,19 @@ local Slider = Tabs.Main:AddSlider("velocidade",
 })
 
 --Abrir e Fechar Hub da tela (tecla de atalho)
-local Keybind = Tabs.Settings:AddKeybind("Keybind", {
-    Title = "Atalho de Teclado",
-    Mode = "Toggle", -- Pode ser "Always", "Toggle" ou "Hold".
-    Default = "LeftControl" -- Tecla padrão.
-})
+local Keybind = Tab:AddKeybind("Keybind", {
+    Title = "Keybind",
+    Description = "Keybind Description",
+    Mode = "Toggle", -- Always, Toggle, Hold
+    Default = "LeftControl", -- String as the name of the keybind (MB1, MB2 for mouse buttons)
 
-Keybind:OnChanged(function(New)
-    print("Atalho de teclado mudado para:", New)
-end)
+    -- Occurs when the keybind is clicked, Value is `true`/`false`
+    Callback = function(Value)
+        print("Keybind clicked!", Value)
+    end,
+
+    -- Occurs when the keybind itself is changed, `New` is a KeyCode Enum OR a UserInputType Enum
+    ChangedCallback = function(New)
+        print("Keybind changed!", New)
+    end
+})

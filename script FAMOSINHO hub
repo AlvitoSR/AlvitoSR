@@ -57,19 +57,3 @@ local Slider = Tabs.Main:AddSlider("velocidade",
 })
 
 --Abrir e Fechar Hub da tela (tecla de atalho)
-local Keybind = Tab:AddKeybind("Keybind", {
-    Title = "Keybind",
-    Description = "Keybind Description",
-    Mode = "Toggle", -- Always, Toggle, Hold
-    Default = "LeftAlt", -- String as the name of the keybind (MB1, MB2 for mouse buttons)
-
-    -- Occurs when the keybind is clicked, Value is `true`/`false`
-    Callback = function(Value)
-        print("Keybind clicked!", Value)
-    end,
-
-    -- Occurs when the keybind itself is changed, `New` is a KeyCode Enum OR a UserInputType Enum
-    ChangedCallback = function(New)
-        print("Keybind changed!", New)
-    end
-})

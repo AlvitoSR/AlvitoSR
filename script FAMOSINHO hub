@@ -1,59 +1,119 @@
 -- famosinho iniciado
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))() 
-               
---aviso ao executar 
-Fluent:Notify({ Title = "SCRIPT", Content = "Executando..." })
+ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+ 
+--aviso ao executar
+ Fluent:Notify({
+     Title = "SCRIPT", --titulo
+     Content = "Executando...", --aviso ao executar
+     Duration = 3 --tempo de duração    
+ })
+ 
+    wait(3) --espera 3 segundos   
 
-Fluent:Notify({ Title = "SCRIPT", Content = "Executado com sucesso" })
-
-local Window = Fluent:CreateWindow({
-    Title = "Famosinho Hub" .. Fluent.Version,
-    TabWidth = 160, Size = UDim2.fromOffset(580, 460), Theme = "Dark"
-})
-
-local Tabs = {
-    Main = Window:AddTab({ Title = "FARM" }),
-    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
-}
---parágrafos
-Tabs.Main:AddParagraph({ Title = "Alvito", Content = "famosinho" })
-
---botões
-Tabs.Main:AddButton({ Title = "infinite jump", Callback = function()   loadstring(game:HttpGet("https://raw.githubusercontent.com/HeyGyt/infjump/main/main"))() end })
-
---alterador
-
-local Toggle = Tabs.Main:AddToggle("AutoFarm", 
-{
-    Title = "AutoFarm", 
-    Description = "não sei ainda oque ele faz",
-    Default = false, -- esse "," e preciso coloque em qualquer situação 
-    Callback = function(state)
-	if state then
-	    Fluent:Notify({ Title = "AutoFarm", Content = "ON" })
-	else
-	    Fluent:Notify({ Title = "AutoFarm", Content = "OFF" })
-        end
-    end 
-})
-
---sliders
-local Slider = Tabs.Main:AddSlider("velocidade", 
-{
-    Title = "Velocidade",
-    Description = "Ajusta a velocidade do jogador",
-    Default = 2,
-    Min = 0,
-    Max = 5,
-    Rounding = 1,
-    Callback = function(Value)
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoid = character:WaitForChild("Humanoid")
-        
-        -- Define a velocidade de caminhada
-        humanoid.WalkSpeed = Value * 10  -- Multiplica o valor para aumentar o impacto
+ Fluent:Notify({
+     Title = "SCRIPT", --titulo
+     Content = "Executado com sucesso", --aviso ao executar 
+     Duration = 3 --tempo de duração
+ })
+ 
+ -- Criando a janela principal
+ local Window = Fluent:CreateWindow({
+     Title = "Famosinho Hub", --titulo      
+     SubTitle = "v1.0.0", --subtitulo
+     TabWidth = 160, --largura das abas
+     Size = UDim2.fromOffset(580, 460), --tamanho da janela
+     Theme = "Dark", --tema
+     MinimizeKey = Enum.KeyCode.LeftControl -- Tecla para minimizar
+ })
+ 
+ -- Criando as abas
+ local Tabs = {
+     Main = Window:AddTab({ Title = "FARM", Icon = "home" }), --aba principal
+     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" }) --aba de configurações
+ }
+ 
+ -- Adicionando parágrafo
+ Tabs.Main:AddParagraph({ 
+     Title = "Alvito", --titulo
+     Content = "famosinho" --conteudo
+ })
+ 
+ -- Botão de pulo infinito
+ Tabs.Main:AddButton({
+     Title = "Pulo Infinito", --titulo
+        Description = "Ativa o pulo infinito", --descrição
+     Callback = function()
+         local Player = game:GetService'Players'.LocalPlayer --player local
+         local UIS = game:GetService'UserInputService' --input do usuário   
+         
+         function Action(Object, Function) if Object ~= nil then Function(Object) end end --função para executar ação
+         
+         UIS.InputBegan:connect(function(UserInput) --conecta o input do usuário    
+             if UserInput.UserInputType == Enum.UserInputType.Keyboard and UserInput.KeyCode == Enum.KeyCode.Space then --se o input for o espaço
+                 Action(Player.Character.Humanoid, function(self) --executa a ação
+                     if self:GetState() == Enum.HumanoidStateType.Jumping or self:GetState() == Enum.HumanoidStateType.Freefall then --se o estado do humano for pulando ou caindo
+                         Action(self.Parent.HumanoidRootPart, function(self) --executa a ação
+                             self.Velocity = Vector3.new(0, 50, 0) --velocidade do personagem
+                         end)
+                     end
+                 end)
+             end
+         end)
+         
+        Fluent:Notify({
+             Title = "Pulo Infinito", --titulo
+                Content = "Ativado com sucesso!", --aviso ao executar 
+             Duration = 2 --tempo de duração
+         })
+     end
+ })
+ 
+ -- Toggle para AutoFarm
+ local Toggle = Tabs.Main:AddToggle("AutoFarm", {
+     Title = "AutoFarm",
+     Description = "Ativa/Desativa o farm automático", --descrição
+        Default = false, --padrão
+     Callback = function(Value)
+         if Value then --se o valor for true
+             Fluent:Notify({  
+                 Title = "AutoFarm", --titulo
+                        Content = "ON", --aviso ao executar 
+                 Duration = 2 --tempo de duração
+             })
+         else
+             Fluent:Notify({
+                 Title = "AutoFarm",
+                 Content = "OFF", --aviso ao executar 
+                 Duration = 2 --tempo de duração
+             })
+         end
+     end
+ })
+ 
+ -- Slider para velocidade
+ local Slider = Tabs.Main:AddSlider("Velocidade", {
+     Title = "Velocidade",
+     Description = "Ajusta a velocidade do jogador", --descrição
+     Default = 2, --padrão
+     Min = 0, --minimo
+     Max = 5, --maximo
+     Rounding = 1, --arredondamento
+     ValueFormat = "0.0x", --formato de valor
+     Callback = function(Value)
+         local player = game.Players.LocalPlayer --player local
+         local character = player.Character or player.CharacterAdded:Wait() --espera o personagem do player
+         local humanoid = character:WaitForChild("Humanoid") --espera o humano do personagem
+         
+         humanoid.WalkSpeed = Value * 10 --velocidade do personagem
+     end
+ })
+ 
+ -- Keybind para abrir/fechar
+ local Keybind = Tabs.Settings:AddKeybind("ToggleUI", {
+     Title = "Interface Toggle",
+     Description = "Tecla para abrir/fechar a interface", --descrição
+     Default = Enum.KeyCode.RightControl, --padrão
+     Callback = function()
+         Window:Toggle() --abre/fecha a janela
     end
-})
-
---Abrir e Fechar Hub da tela (tecla de atalho)
+ })
